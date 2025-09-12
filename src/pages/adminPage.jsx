@@ -3,6 +3,9 @@ import { FaBoxArchive } from "react-icons/fa6";
 import { MdOutlineBookmarkBorder } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
+import ProductAdminPage from "./admin/productsAdminPage";
+import AddProductAdminPage from "./admin/addProductAdminPage";
+
 
 export default function AdminPage(){
     return(
@@ -17,7 +20,8 @@ export default function AdminPage(){
             <div className="w-[calc(100%-300px)] h-full">
                 <Routes path="/">
                     <Route path="/" element={<h1>Dashboard</h1>}></Route>
-                    <Route path="/products" element={<h1>Products</h1>}></Route>
+                    <Route path="/products" element={<ProductAdminPage/>}></Route>
+                    <Route path="/newProduct" element={<AddProductAdminPage/>}></Route>
                     <Route path="/orders" element={<h1>Orders</h1>}></Route>
                 </Routes>
             </div>
