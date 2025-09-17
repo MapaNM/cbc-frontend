@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
+import uploadFile from "../../utils/mediaUpload"
 
 export default function AddProductAdminPage(){
 
@@ -10,22 +11,37 @@ export default function AddProductAdminPage(){
     const [alternativeName, setAlternativeName] = useState("")
     const [labelledPrice, setLabelledPrice] = useState("")
     const [price, setPrice] = useState("")
-    const [images, setImages] = useState("")
+    const [images, setImages] = useState([])
     const [description, setDescription] = useState("")
     const [stock, setStock] = useState("")
     const [isAvailable, setIsAvailable] = useState(true)
     const [category, setCategory] = useState("cream")
     const navigate = useNavigate()
 
-    function handlesubmit(){
+    async function handlesubmit(){ 
+          
+        const promisesArray = []
+
+        for(let i=0; i<images.length; i++){
+            
+            const promise = uploadFile(images[i]);
+            promisesArray[i] = promise;  
+
+        }
+
+        const responses = await Promise.all(promisesArray)
+        console.log(responses)
+
+       
+
         const altNamesInArray = alternativeName.split(",");
         const productdata = {
             productId: productId,
             name: productName,
             altNames: altNamesInArray,
-            labelledPrice: labelledPrice,
+            labelledPrice: labelledPrice,  
             price: price,
-            images: [],
+            images: responses,
             description: description,
             stock: stock,
             isAvailable: isAvailable,
@@ -98,9 +114,9 @@ export default function AddProductAdminPage(){
                 </div>
                 <div className="w-[500px] flex flex-col gap-[5px]">
                     <label className="text-sm font-bold">Images</label>
-                    <input value={images} onChange={(e)=>{
-                        setImages(e.target.value)
-                    }} className="w-full h-[40px] border-[2px] border-black rounded-[5px]" type="text" />
+                    <input multiple onChange={(e)=>{
+                         setImages(e.target.files);
+                    }} className="w-full h-[40px] border-[2px] border-black rounded-[5px]" type="file" />
                 </div>
                 <div className="w-[500px] flex flex-col gap-[5px]">
                     <label className="text-sm font-bold">Description</label>
