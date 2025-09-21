@@ -58,7 +58,7 @@ export default function AddProductAdminPage(){
 
         axios.post(import.meta.env.VITE_BACKEND_URL + "/products", productdata,{
             headers: {
-                Authorization: "Bearer "+token
+                Authorization: `Bearer ${token}`
             }
         } ).then(
             (res)=>{
