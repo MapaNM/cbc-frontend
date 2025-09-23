@@ -1,22 +1,24 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
 import uploadFile from "../../utils/mediaUpload"
 
-export default function AddProductAdminPage(){
+export default function UpdateProductAdminPage(){
 
-    const [productId, setProductId] = useState("")
-    const [productName, setProductName] = useState("")
-    const [alternativeName, setAlternativeName] = useState("")
-    const [labelledPrice, setLabelledPrice] = useState("")
-    const [price, setPrice] = useState("")
+    const location = useLocation();
+    const [productId, setProductId] = useState(location.state.productId);
+    const [productName, setProductName] = useState(location.state.name);
+    const [alternativeName, setAlternativeName] = useState(location.state.altNames.join(","));
+    const [labelledPrice, setLabelledPrice] = useState(location.state.labelledPrice);
+    const [price, setPrice] = useState(location.state.price);
     const [images, setImages] = useState([])
-    const [description, setDescription] = useState("")
-    const [stock, setStock] = useState("")
-    const [isAvailable, setIsAvailable] = useState(true)
+    const [description, setDescription] = useState(location.state.description);
+    const [stock, setStock] = useState(location.state.stock);
+    const [isAvailable, setIsAvailable] = useState(location.state.isAvailable);
     const [category, setCategory] = useState("cream")
     const navigate = useNavigate()
+
 
     async function handlesubmit(){ 
           
@@ -48,6 +50,10 @@ export default function AddProductAdminPage(){
             category: category
         }
 
+        if(responses.length === 0){
+            productdata.images = location.state.images;
+        }
+
         const token = localStorage.getItem("token");
 
         if(token == null){
@@ -56,7 +62,7 @@ export default function AddProductAdminPage(){
             return;
         }
 
-        axios.post(import.meta.env.VITE_BACKEND_URL + "/products", productdata,{
+        axios.put(import.meta.env.VITE_BACKEND_URL + "/products/" + productId, productdata,{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -84,7 +90,7 @@ export default function AddProductAdminPage(){
 
                 <div className="w-[200px] flex flex-col gap-[5px]">
                     <label className="text-sm font-bold">Product ID</label>
-                    <input value={productId} onChange={(e)=>{
+                    <input disabled value={productId} onChange={(e)=>{
                         setProductId(e.target.value)
                     }} className="w-full h-[40px] border-[2px] border-black rounded-[5px]" type="text" />
                 </div>
@@ -153,7 +159,7 @@ export default function AddProductAdminPage(){
                 </div>
                 <div className="w-full flex flex-row gap-[20px] items-center justify-center pt-5">
                    <Link to={"/admin/products"} className="w-[100px] h-[40px] text-md font-bold text-black border-[2px] border-black rounded-[5px] flex justify-center items-center">Cancel</Link>
-                    <button onClick={handlesubmit} className="w-[200px] h-[40px] text-md font-medium text-white border-[2px] bg-black rounded-[5px] flex justify-center items-center cursor-pointer">Add Product</button>
+                    <button onClick={handlesubmit} className="w-[200px] h-[40px] text-md font-medium text-white border-[2px] bg-black rounded-[5px] flex justify-center items-center cursor-pointer">Update Product</button>
                 </div> 
                 </div> 
 

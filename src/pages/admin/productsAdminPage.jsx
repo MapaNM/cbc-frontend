@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BiTrash } from "react-icons/bi";
+import { BiEdit, BiTrash } from "react-icons/bi";
 import { PiPlus } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
+import Loader from "../../components/loader";
 
 const sampleProducts = [
      {
@@ -70,31 +71,38 @@ const sampleProducts = [
 
 export default function ProductAdminPage(){
 
-  const [productives, setProductives] = useState(sampleProducts);
-  const [a, setA] = useState(0);
+  const [productives, setProductives] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  //const [a, setA] = useState(0);
 
   useEffect(
     ()=>{
-      axios.get(import.meta.env.VITE_BACKEND_URL + "/products").then(
+      if(isLoading){
+          axios.get(import.meta.env.VITE_BACKEND_URL + "/products")
+        .then(
         (res)=>{
           setProductives(res.data);
+          setIsLoading(false);
         }
       )
-    },
-    [a]
-  )
+      }
+
+    },[isLoading]);
 
   const navigate = useNavigate();
 
     return(
         <div className="h-full w-full border-[3px]">
 
-          <table>
-            <thead>
-                <tr>
-                    <th className="p-[10px]">Image</th>
-                    <th className="p-[10px]">Product ID</th> 
-                    <th className="p-[10px]">Name</th>
+          {isLoading ? (
+            <Loader/>
+          ) : (
+            <table>
+              <thead>
+                  <tr>
+                      <th className="p-[10px]">Image</th>
+                      <th className="p-[10px]">Product ID</th> 
+                      <th className="p-[10px]">Name</th>
                     <th className="p-[10px]">Category</th>
                     <th className="p-[10px]">Price</th>
                     <th className="p-[10px]">Labelled Price</th>
@@ -118,7 +126,7 @@ export default function ProductAdminPage(){
                                 <td className="p-[10px]">{product.price}</td>
                                 <td className="p-[10px]">{product.labelledPrice}</td>
                                 <td className="p-[10px]">{product.stock}</td>
-                                <td className="p-[10px]">
+                                <td className="p-[10px] flex flex-row justify-center items-center gap-[10px]">
                                   <BiTrash className="bg-red-500 text-2xl text-white cursor-pointer rounded-full p-1" onClick={
                                     ()=>{
                                       const token = localStorage.getItem("token");
@@ -137,7 +145,7 @@ export default function ProductAdminPage(){
                                           console.log("Product Delete Successfully");
                                           console.log(res.data);
                                           toast.success("Product Deleted Successfully");
-                                          setA(a+1);
+                                          setIsLoading(!isLoading);
                                         }
                                       ).catch(
                                         (err) => {
@@ -147,13 +155,20 @@ export default function ProductAdminPage(){
                                       );
                                     }
                                   }/>
+                                  <BiEdit onClick={
+                                    ()=>{
+                                      navigate("/admin/updateProduct" , {
+                                        state: product
+                                      })
+                                    }
+                                  } className="bg-blue-500 text-2xl text-white cursor-pointer rounded-full p-1"/>
                                 </td>
                             </tr>
                         );
                     }
                 )}
             </tbody>
-          </table>
+          </table>)}
 
             <Link to={"/admin/newProduct"} className="fixed right-[60px] bottom-[60px] p-[20px] bg-black rounded-full cursor-pointer">
                 <PiPlus className="text-3xl text-white"/>
