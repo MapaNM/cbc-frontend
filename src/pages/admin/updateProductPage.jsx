@@ -68,16 +68,16 @@ export default function UpdateProductAdminPage(){
             }
         } ).then(
             (res)=>{
-                console.log("Product added successfully");
+                console.log("Product updated successfully");
                 console.log(res.data);
-               toast.success("Product added successfully");
+               toast.success("Product updated successfully");
                navigate("/admin/products");
 
             }
         ).catch(
             (err)=>{
-                console.log("Error adding product");
-                toast.error("Error adding product");
+                console.log("Error updating product");
+                toast.error("Error updating product");
             }
         )
 
