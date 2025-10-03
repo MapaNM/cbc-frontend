@@ -40,7 +40,27 @@ export default function ProductOverView(){
                     <div className="w-[49%] h-full flex flex-col justify-center items-center">
                         <ImageSlider images={product.images}/>
                     </div>
-                    <div className="w-[49%] h-full bg-green-400">
+                    <div className="w-[49%] h-full  flex flex-col items-center pt-10 ">
+                        <h1 className="text-3xl font-bold">{product.name} <span className="text-xl font-medium">{product.altNames.join(" | ")}</span></h1>
+                        <p className="text-lg font-light mt-[20px]">{product.description}</p>
+                        <div className="w-full  flex flex-col  items-center mt-[20px]">
+                            {
+                                product.labelledPrice > product.price ?
+                                <div>
+                                    <span className="text-2xl font-bold  line-through mr-[10px]">Rs.{product.labelledPrice.toLocaleString("en-US", {minimumFractionDigits: 2})}</span>
+                                    <span className="text-3xl font-bold "> Rs.{product.price.toLocaleString("en-US", {minimumFractionDigits: 2})}</span>
+                                </div>
+                                :
+                                <div>
+                                <span className="text-3xl font-bold "> Rs.{product.price.toLocaleString("en-US", {minimumFractionDigits: 2})}</span>
+                                </div>
+                            }
+
+                        </div>
+                        <div className="w-full  flex flex-row justify-center items-center mt-[20px] gap-5 " >
+                            <button className="w-[150px] h-[40px] bg-blue-600 text-white font-medium  rounded-lg cursor-pointer hover:bg-blue-900">Add to Cart</button>
+                            <button className="w-[150px] h-[40px] bg-gray-300 text-black font-medium  rounded-lg cursor-pointer hover:bg-gray-400">Buy Now</button>
+                        </div>
 
                     </div>
                     
